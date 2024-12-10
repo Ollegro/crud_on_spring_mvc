@@ -29,7 +29,7 @@ public class TaskDAO {
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     public int getAllCount() {
         Query<Long> query = getSession().createQuery("select count(*) from Task t", Long.class);
-//return query.getSingleResult().intValue();  протестировать в дальнейшем
+        //return query.getSingleResult().intValue();  протестировать в дальнейшем
         return Math.toIntExact(query.uniqueResult());
     }
 

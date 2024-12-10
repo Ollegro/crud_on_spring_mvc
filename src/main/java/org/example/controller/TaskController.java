@@ -1,10 +1,10 @@
 package org.example.controller;
 
 import org.example.domain.Task;
+import org.example.services.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.example.services.TaskService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,8 +30,10 @@ public class TaskController {
         List<Task> taskList = taskService.getAllTasks((page - 1) * limit, limit);
         model.addAttribute("tasks", taskList);
         model.addAttribute("current_page", page);
-        int totalPages = (int) Math.ceil(1.0 + taskService.getAllCount() / limit);
-        if(totalPages > 1) {
+
+        int totalPages = (int) Math.ceil((double) taskService.getAllCount() / limit);
+
+        if (totalPages > 1) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
             model.addAttribute("page_numbers", pageNumbers);
         }

@@ -2,12 +2,12 @@ version: '3.9'
 services:
 
   db:
-    image: mysql:5.7.34
+    image: mysql:5.7
     restart: "no"
     ports:
       - "3306:3306"
     volumes:
-      - my-data-volume:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
       - ./src/main/resources/init:/docker-entrypoint-initdb.d  # Монтируем папку init в контейнер
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -18,6 +18,8 @@ services:
       timeout: 5s
       start_period: 10s
       retries: 5
+    networks:
+      - app-network
 
   server:
     build:
@@ -28,6 +30,11 @@ services:
     depends_on:
       db:
         condition: service_healthy  # Зависимость от состояния здоровья базы данных
+    networks:
+      - app-network
 
 volumes:
-  my-data-volume:
+  mysql-data:
+
+networks:
+  app-network:

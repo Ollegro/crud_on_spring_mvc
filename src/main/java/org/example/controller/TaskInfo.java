@@ -26,4 +26,9 @@ public class TaskInfo {
 
     public TaskInfo() {
     }
+
+    public TaskInfo(String description, Status status) {
+        this.description = description;
+        this.status = status;
+    }
 }
