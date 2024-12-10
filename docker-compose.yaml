@@ -1,0 +1,33 @@
+version: '3.9'
+services:
+
+  db:
+    image: mysql:5.7.34
+    restart: "no"
+    ports:
+      - "3306:3306"
+    volumes:
+      - my-data-volume:/var/lib/mysql
+      - ./src/main/resources/init:/docker-entrypoint-initdb.d  # Монтируем папку init в контейнер
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: todo
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+  server:
+    build:
+      context: .  # Путь к директории с Dockerfile
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy  # Зависимость от состояния здоровья базы данных
+
+volumes:
+  my-data-volume:
